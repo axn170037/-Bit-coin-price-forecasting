@@ -22,9 +22,22 @@ library(gtable)
 library(grid)
 library(forecast)
 
-bitcoin <- fread('bitcoin.csv')
-fred <- fread('fred.csv')
-bitcoin <- merge(bitcoin,fred,all=FALSE)
+sp500<- read.csv('SP500.csv', na.strings = "#N/A")
+wti<- read.csv('West Texas Intermediate.csv',na.strings = "#N/A")
+bitcoin<- read.csv('Bitcoin.csv',na.strings = "#N/A")
+gold<- read.csv('GOLDAMGBD228NLBM.csv',na.strings = "#N/A")
+useuro<- read.csv('US-EURO Exchange rate.csv',na.strings = "#N/A")
+
+combined<- list(sp500,wti,bitcoin,gold,useuro)
+bitcoin<- join_all(combined,by= "Date", type="inner")
+bitcoin$Date <- as.Date(bitcoin$Date, "%Y-%m-%d")
+bitcoin$SP500<-as.numeric(bitcoin$SP500)
+bitcoin$crudepr<-as.numeric(bitcoin$crudepr)
+bitcoin$bvalue<-as.numeric(bitcoin$bvalue)
+bitcoin$GOLD<-as.numeric(bitcoin$GOLD)
+bitcoin$deusconv<-as.numeric(bitcoin$deusconv)
+
+
 summary(bitcoin)
 
 head(bitcoin)
